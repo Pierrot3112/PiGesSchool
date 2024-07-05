@@ -5,6 +5,11 @@ import SideBar from '../SideBar/SideBar'
 import Footer from '../Footer/Footer'
 import Dashboard from '../../Dashboard/Dashboard'
 import Classe from '../../Classes/Classe'
+import Eleves from '../../Eleves/Eleves'
+import Enseignants from '../../Enseignants/Enseignants'
+import EmploisDuTemps from '../../EmploiDuTemps/EmploiDuTemps'
+import Notes from '../../Notes/Notes'
+import CalendrierScolaire from '../../CalendrierScolaire/CalenrierScolaire'
 
 const Content = () => {
     const [menuSelectionne, setMenuSelectionne] = useState('Tableau de bord');
@@ -21,11 +26,11 @@ const Content = () => {
                 {/* Contenu dynamique en fonction du menu sélectionné */}
                 {menuSelectionne === 'Tableau de bord' && <Dashboard />}
                 {menuSelectionne === 'Classe' && <Classe />}
-                {/*{menuSelectionne === 'Elèves' && <Eleves />}
+                {menuSelectionne === 'Elèves' && <Eleves />}
                 {menuSelectionne === 'Enseignants' && <Enseignants />}
                 {menuSelectionne === 'Emplois ddu temps' && <EmploisDuTemps />}
                 {menuSelectionne === 'Notes' && <Notes />}
-                {menuSelectionne === 'Calendrier Scolaire' && <CalendrierScolaire />} */}
+                {menuSelectionne === 'Calendrier Scolaire' && <CalendrierScolaire />} 
             </div>
             <footer className="main-footer">
                 <Footer />

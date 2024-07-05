@@ -22,7 +22,7 @@ const Dashboard = () =>{
                             <p>New Orders</p>
                             </div>
                             <div className="icon">
-                            <i claclassNamess="ion ion-bag"></i>
+                            <i className="ion ion-bag"></i>
                             </div>
                             <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right"></i></a>
                         </div>
@@ -34,7 +34,7 @@ const Dashboard = () =>{
                             <p>New Orders</p>
                             </div>
                             <div className="icon">
-                            <i claclassNamess="ion ion-bag"></i>
+                            <i className="ion ion-bag"></i>
                             </div>
                             <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right"></i></a>
                         </div>
@@ -46,7 +46,7 @@ const Dashboard = () =>{
                             <p>New Orders</p>
                             </div>
                             <div className="icon">
-                            <i claclassNamess="ion ion-bag"></i>
+                            <i className="ion ion-bag"></i>
                             </div>
                             <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right"></i></a>
                         </div>
@@ -58,7 +58,7 @@ const Dashboard = () =>{
                             <p>New Orders</p>
                             </div>
                             <div className="icon">
-                            <i claclassNamess="ion ion-bag"></i>
+                            <i className="ion ion-bag"></i>
                             </div>
                             <a href="#" className="small-box-footer">More info <i className="fa fa-arrow-circle-right"></i></a>
                         </div>
