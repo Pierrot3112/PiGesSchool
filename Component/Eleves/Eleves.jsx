@@ -1,5 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import EleveForm from './EleveForm';
+import { toast } from 'react-toastify';
+import ReactPaginate from 'react-paginate';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt, faTimes, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
+import './Eleves.css'; // Make sure to import your CSS file
+import $ from 'jquery'; 
+
 
 const Eleves = () => {
     const [showForm, setShowForm] = useState(false);
@@ -7,6 +14,7 @@ const Eleves = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deleteEleveId, setDeleteEleveId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(0);
 
     const handleOpenForm = () => {
         setShowForm(true);
@@ -16,7 +24,7 @@ const Eleves = () => {
     const handleCloseForm = () => {
         setShowForm(false);
         setEditingEleve(null);
-        console.log("modal closed")
+        console.log(bouton)
     };
 
     const handleEdit = (eleve) => {
@@ -34,21 +42,48 @@ const Eleves = () => {
         // await axios.delete(`/api/eleves/${deleteEleveId}`);
         setShowDeleteConfirm(false);
         setDeleteEleveId(null);
+        toast.success("suppression avec succès")
         console.log(`Eleve with id ${deleteEleveId} deleted.`);
     };
 
     const eleves = [
-        { id: 1, nom: "Dupont", prenom: "Jean", service: "Maths" },
-        { id: 2, nom: "Durand", prenom: "Marie", service: "Sciences" },
-        // Ajouter d'autres élèves ici...
+        { id: 1, nom: "Martin", prenom: "Jean", service: "Maths" },
+        { id: 2, nom: "Pierrot", prenom: "Torreip", service: "DevWeb"},
+        { id: 3, nom: "Robin", prenom: "Julie", service: "Sport" },
+        { id: 4, nom: "Ange", prenom: "Voni", service: "Algorythm"},
+        { id: 5, nom: "Faniry", prenom: "Niaina", service: "php"},
+        { id: 6, nom: "Martin", prenom: "Jean", service: "Maths" },
+        { id: 7, nom: "Pierrot", prenom: "Torreip", service: "DevWeb"},
+        { id: 8, nom: "Robin", prenom: "Julie", service: "Sport" },
+        { id: 9, nom: "Ange", prenom: "Voni", service: "Algorythm"},
+        { id: 10, nom: "Faniry", prenom: "Niaina", service: "php"},
+        { id: 11, nom: "Martin", prenom: "Jean", service: "Maths" },
+        { id: 12, nom: "Pierrot", prenom: "Torreip", service: "DevWeb"},
+        { id: 13, nom: "Robin", prenom: "Julie", service: "Sport" },
+        { id: 14, nom: "Ange", prenom: "Voni", service: "Algorythm"},
+        { id: 15, nom: "Faniry", prenom: "Niaina", service: "php"},
+        { id: 16, nom: "Martin", prenom: "Jean", service: "Maths" },
+        { id: 17, nom: "Pierrot", prenom: "Torreip", service: "DevWeb"},
+        { id: 18, nom: "Robin", prenom: "Julie", service: "Sport" },
+        { id: 19, nom: "Ange", prenom: "Voni", service: "Algorythm"},
+        { id: 20, nom: "Faniry", prenom: "Niaina", service: "php"},
     ];
-
+    
     const filteredEleves = eleves.filter(
         (eleve) =>
             eleve.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
             eleve.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
             eleve.service.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const itemsPerPage = 10;
+    const pageCount = Math.ceil(filteredEleves.length / itemsPerPage);
+    const offset = currentPage * itemsPerPage;
+    const currentItems = filteredEleves.slice(offset, offset + itemsPerPage);
+
+    const handlePageClick = ({ selected }) => {
+        setCurrentPage(selected);
+    };
 
     return (
         <>
@@ -86,13 +121,15 @@ const Eleves = () => {
                                         />
                                         <div className="input-group-btn">
                                             <button className="btn btn-sm btn-default">
-                                                <i className="fa fa-search"></i>
+                                                <FontAwesomeIcon icon={faSearch} />
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="pull-right hidden-xs">
-                                    <button className="btn btn-primary" onClick={handleOpenForm}><b>Ajouter une nouvelle élève</b></button>
+                                    <button className="btn btn-primary" onClick={handleOpenForm}>
+                                        <FontAwesomeIcon icon={faPlus} /> <b>Ajouter une nouvelle élève</b>
+                                    </button>
                                 </div>
                             </div>
                             <div className="box-body">
@@ -106,23 +143,36 @@ const Eleves = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredEleves.map((eleve) => (
+                                        {currentItems.map((eleve) => (
                                             <tr key={eleve.id}>
                                                 <td style={{ width: '10px' }}>{eleve.id}.</td>
                                                 <td>{eleve.nom} {eleve.prenom}</td>
                                                 <td>{eleve.service}</td>
                                                 <td>
                                                     <button onClick={() => handleEdit(eleve)} title="Modifier">
-                                                        <i className="fa fa-edit"></i>
+                                                        <FontAwesomeIcon icon={faEdit} />
                                                     </button>
                                                     <button onClick={() => handleDelete(eleve.id)} title="Supprimer">
-                                                        <i className="fa fa-trash-alt"></i>
+                                                        <FontAwesomeIcon icon={faTrashAlt} />
                                                     </button>
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
+                                <ReactPaginate
+                                    previousLabel={'Précédent'}
+                                    nextLabel={'Suivant'}
+                                    breakLabel={'...'}
+                                    breakClassName={'break-me'}
+                                    pageCount={pageCount}
+                                    marginPagesDisplayed={2}
+                                    pageRangeDisplayed={5}
+                                    onPageChange={handlePageClick}
+                                    containerClassName={'pagination'}
+                                    subContainerClassName={'pages pagination'}
+                                    activeClassName={'active'}
+                                />
                             </div>
                         </div>
                     </div>
@@ -132,12 +182,12 @@ const Eleves = () => {
             {showForm && (
                 <div className="modal">
                     <div className="modal-content">
-                        <div>
+                        <div className="modal-header">
                             <button className="close-button" onClick={handleCloseForm} title="Fermer">
-                                <i className="fa fa-times"></i>
+                                <FontAwesomeIcon icon={faTimes} />
                             </button>
                         </div>
-                        <EleveForm onSave={handleCloseForm} initialData={editingEleve} />
+                        <EleveForm initialData={editingEleve} />
                     </div>
                 </div>
             )}

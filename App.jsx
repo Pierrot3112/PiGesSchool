@@ -1,10 +1,11 @@
 import React from "react";
-import { BrowserRouter, Routes,Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Content from "./Component/Pages/Content/Content";
-// import NavBar from "./Component/Pages/NavBar/NavBar";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './Page/dist/css/AdminLTE.min.css';
+import CreateEdt from './Component/EmploiDuTemps/CreateEdt'
 
-
-import './Page/dist/css/AdminLTE.min.css'
 
 function App() {
   return (
@@ -12,8 +13,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="*" element={<Content />} />
+          <Route path="/edt" element={<CreateEdt />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </>
   );
 }
