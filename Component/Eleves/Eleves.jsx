@@ -4,9 +4,8 @@ import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt, faTimes, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
-import './Eleves.css'; // Make sure to import your CSS file
-import $ from 'jquery'; 
-
+import './Eleves.css'; // Assurez-vous d'importer votre fichier CSS
+import axios from 'axios'; // Importez axios pour effectuer des requêtes HTTP
 
 const Eleves = () => {
     const [showForm, setShowForm] = useState(false);
@@ -14,7 +13,22 @@ const Eleves = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deleteEleveId, setDeleteEleveId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [eleves, setEleves] = useState([]); // Utilisez l'état pour stocker les élèves récupérés
     const [currentPage, setCurrentPage] = useState(0);
+
+    useEffect(() => {
+        // Fonction pour récupérer les élèves depuis votre API
+        const fetchEleves = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/eleves'); // Remplacez par votre URL d'API
+                setEleves(response.data); // Mettez à jour l'état avec les données reçues
+            } catch (error) {
+                console.error('Erreur lors de la récupération des élèves : ', error);
+            }
+        };
+
+        fetchEleves(); // Appelez la fonction de récupération des élèves
+    }, []); // Le tableau vide [] indique que ce useEffect s'exécute une seule fois après le premier rendu
 
     const handleOpenForm = () => {
         setShowForm(true);
@@ -24,7 +38,6 @@ const Eleves = () => {
     const handleCloseForm = () => {
         setShowForm(false);
         setEditingEleve(null);
-        console.log(bouton)
     };
 
     const handleEdit = (eleve) => {
@@ -37,45 +50,33 @@ const Eleves = () => {
         setShowDeleteConfirm(true);
     };
 
-    const confirmDelete = () => {
-        // Suppression de l'élève par ID
-        // await axios.delete(`/api/eleves/${deleteEleveId}`);
-        setShowDeleteConfirm(false);
-        setDeleteEleveId(null);
-        toast.success("suppression avec succès")
-        console.log(`Eleve with id ${deleteEleveId} deleted.`);
+    const confirmDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:8080/api/eleves/${deleteEleveId}`);
+            setShowDeleteConfirm(false);
+            setDeleteEleveId(null);
+            toast.success("Suppression réussie");
+            // Mettre à jour la liste des élèves après la suppression si nécessaire
+        } catch (error) {
+            console.error('Erreur lors de la suppression de l\'élève : ', error);
+            toast.error("Erreur lors de la suppression de l'élève");
+        }
     };
 
-    const eleves = [
-        { id: 1, nom: "Martin", prenom: "Jean", service: "Maths" },
-        { id: 2, nom: "Pierrot", prenom: "Torreip", service: "DevWeb"},
-        { id: 3, nom: "Robin", prenom: "Julie", service: "Sport" },
-        { id: 4, nom: "Ange", prenom: "Voni", service: "Algorythm"},
-        { id: 5, nom: "Faniry", prenom: "Niaina", service: "php"},
-        { id: 6, nom: "Martin", prenom: "Jean", service: "Maths" },
-        { id: 7, nom: "Pierrot", prenom: "Torreip", service: "DevWeb"},
-        { id: 8, nom: "Robin", prenom: "Julie", service: "Sport" },
-        { id: 9, nom: "Ange", prenom: "Voni", service: "Algorythm"},
-        { id: 10, nom: "Faniry", prenom: "Niaina", service: "php"},
-        { id: 11, nom: "Martin", prenom: "Jean", service: "Maths" },
-        { id: 12, nom: "Pierrot", prenom: "Torreip", service: "DevWeb"},
-        { id: 13, nom: "Robin", prenom: "Julie", service: "Sport" },
-        { id: 14, nom: "Ange", prenom: "Voni", service: "Algorythm"},
-        { id: 15, nom: "Faniry", prenom: "Niaina", service: "php"},
-        { id: 16, nom: "Martin", prenom: "Jean", service: "Maths" },
-        { id: 17, nom: "Pierrot", prenom: "Torreip", service: "DevWeb"},
-        { id: 18, nom: "Robin", prenom: "Julie", service: "Sport" },
-        { id: 19, nom: "Ange", prenom: "Voni", service: "Algorythm"},
-        { id: 20, nom: "Faniry", prenom: "Niaina", service: "php"},
-    ];
-    
+    // Filtrage des élèves en fonction du terme de recherche
     const filteredEleves = eleves.filter(
         (eleve) =>
-            eleve.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            eleve.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            eleve.service.toLowerCase().includes(searchTerm.toLowerCase())
+        eleve.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        eleve.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        eleve.classe.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        eleve.ecoleOrigine.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        eleve.matricule.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        eleve.sexe.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        eleve.dateNaissance.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        eleve.adresse.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Pagination
     const itemsPerPage = 10;
     const pageCount = Math.ceil(filteredEleves.length / itemsPerPage);
     const offset = currentPage * itemsPerPage;
@@ -138,7 +139,12 @@ const Eleves = () => {
                                         <tr>
                                             <th style={{ width: '10px' }}>#</th>
                                             <th>Nom et prénoms</th>
-                                            <th>Service</th>
+                                            <th>Date de Naissance</th>
+                                            <th>Adresse</th>
+                                            <th>Genre</th>
+                                            <th>Ecole D'origine</th>
+                                            <th>Classe</th>
+                                            <th>Matricule</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -147,7 +153,12 @@ const Eleves = () => {
                                             <tr key={eleve.id}>
                                                 <td style={{ width: '10px' }}>{eleve.id}.</td>
                                                 <td>{eleve.nom} {eleve.prenom}</td>
-                                                <td>{eleve.service}</td>
+                                                <td>{eleve.dateNaissance}</td>
+                                                <td>{eleve.adresse}</td>
+                                                <td>{eleve.sexe}</td>
+                                                <td>{eleve.ecoleOrigine}</td>
+                                                <td>{eleve.classe}</td>
+                                                <td>{eleve.matricule}</td>
                                                 <td>
                                                     <button onClick={() => handleEdit(eleve)} title="Modifier">
                                                         <FontAwesomeIcon icon={faEdit} />
@@ -202,6 +213,6 @@ const Eleves = () => {
             )}
         </>
     );
-}
+};
 
 export default Eleves;

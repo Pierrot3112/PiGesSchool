@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+
 const EleveForm = ({ onSave, initialData }) => {
     const [formData, setFormData] = useState({
         nom: '',
         prenom: '',
-        date_naissance: '',
+        dateNaissance: '',
         adresse: '',
         sexe: '',
-        ecole_origine: '',
+        ecoleOrigine: '',
         classe: '',
         matricule: '',
-        nom_pere: '',
-        profession_pere: '',
-        nom_mere: '',
-        profession_mere: '',
-        contact_parent: '',
-        adresse_parent: '',
-        image_eleve: '',
+        nomPere: '',
+        professionPere: '',
+        nomMere: '',
+        professionMere: '',
+        contactParent: '',
+        adresseParent: '',
+        // imageEleve: '',
     });
 
     useEffect(() => {
@@ -25,41 +26,69 @@ const EleveForm = ({ onSave, initialData }) => {
             setFormData({
                 nom: initialData.nom || '',
                 prenom: initialData.prenom || '',
-                date_naissance: initialData.date_naissance || '',
+                dateNaissance: initialData.dateNaissance || '',
                 adresse: initialData.adresse || '',
                 sexe: initialData.sexe || '',
-                ecole_origine: initialData.ecole_origine || '',
+                ecoleOrigine: initialData.ecoleOrigine || '',
                 classe: initialData.classe || '',
                 matricule: initialData.matricule || '',
-                nom_pere: initialData.nom_pere || '',
-                profession_pere: initialData.profession_pere || '',
-                nom_mere: initialData.nom_mere || '',
-                profession_mere: initialData.profession_mere || '',
-                contact_parent: initialData.contact_parent || '',
-                adresse_parent: initialData.adresse_parent || '',
-                image_eleve: initialData.image_eleve || '',
+                nomPere: initialData.nomPere || '',
+                professionPere: initialData.professionPere || '',
+                nomMere: initialData.nomMere || '',
+                professionMere: initialData.professionMere || '',
+                contactParent: initialData.contactParent || '',
+                adresseParent: initialData.adresseParent || '',
+                imageEleve: initialData.imageEleve || '',
             });
         }
     }, [initialData]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const { name, value, type, files } = e.target;
+        if (type === "file") {
+            setFormData({ ...formData, [name]: files[0] });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const formDataToSend = new FormData();
+        Object.keys(formData).forEach(key => {
+            formDataToSend.append(key, formData[key]);
+        });
+
+        console.log('Form data:', formData);
+
         try {
-            if (initialData) {
-                // await axios.put(`/api/eleves/${initialData.id}`, formData);
-                toast.success("Modification avec succès");
+            let response;
+            if (initialData && initialData.id) {
+                const url = `http://localhost:8080/api/eleves/${initialData.id}`;
+                response = await axios.put(url, formDataToSend, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
             } else {
-                // await axios.post('/api/eleves', formData);
-                toast.success("Enregistrement avec succès");
+                const url = 'http://localhost:8080/api/eleves';
+                response = await axios.post(url, formDataToSend, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
             }
-            onSave();
-            console.log(formData);
+
+            if (response.status === 200 || response.status === 201) {
+                console.log('Response data:', response.data);
+                toast.success("Opération réussie");
+                onSave(); // Appeler la fonction onSave ici
+            } else {
+                console.error('Error:', response.statusText);
+                toast.error("Erreur lors de l'enregistrement");
+            }
         } catch (error) {
+            console.error(error);
             toast.error("Erreur lors de l'enregistrement");
         }
     };
@@ -71,7 +100,7 @@ const EleveForm = ({ onSave, initialData }) => {
                     <h1 className="text-center mb-4">
                         {initialData ? "Modifier l'élève" : "Ajouter un élève"}
                     </h1>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} encType="multipart/form-data">
                         <div className="form-group">
                             <input
                                 type="text"
@@ -98,8 +127,8 @@ const EleveForm = ({ onSave, initialData }) => {
                             <input
                                 type="date"
                                 className="form-control"
-                                name="date_naissance"
-                                value={formData.date_naissance}
+                                name="dateNaissance"
+                                value={formData.dateNaissance}
                                 onChange={handleChange}
                                 required
                             />
@@ -129,8 +158,8 @@ const EleveForm = ({ onSave, initialData }) => {
                             <input
                                 type="text"
                                 className="form-control"
-                                name="ecole_origine"
-                                value={formData.ecole_origine}
+                                name="ecoleOrigine"
+                                value={formData.ecoleOrigine}
                                 onChange={handleChange}
                                 placeholder="École d'origine"
                             />
@@ -159,8 +188,8 @@ const EleveForm = ({ onSave, initialData }) => {
                             <input
                                 type="text"
                                 className="form-control"
-                                name="nom_pere"
-                                value={formData.nom_pere}
+                                name="nomPere"
+                                value={formData.nomPere}
                                 onChange={handleChange}
                                 placeholder="Nom du père"
                             />
@@ -169,8 +198,8 @@ const EleveForm = ({ onSave, initialData }) => {
                             <input
                                 type="text"
                                 className="form-control"
-                                name="profession_pere"
-                                value={formData.profession_pere}
+                                name="professionPere"
+                                value={formData.professionPere}
                                 onChange={handleChange}
                                 placeholder="Profession du père"
                             />
@@ -179,8 +208,8 @@ const EleveForm = ({ onSave, initialData }) => {
                             <input
                                 type="text"
                                 className="form-control"
-                                name="nom_mere"
-                                value={formData.nom_mere}
+                                name="nomMere"
+                                value={formData.nomMere}
                                 onChange={handleChange}
                                 placeholder="Nom de la mère"
                             />
@@ -189,8 +218,8 @@ const EleveForm = ({ onSave, initialData }) => {
                             <input
                                 type="text"
                                 className="form-control"
-                                name="profession_mere"
-                                value={formData.profession_mere}
+                                name="professionMere"
+                                value={formData.professionMere}
                                 onChange={handleChange}
                                 placeholder="Profession de la mère"
                             />
@@ -199,8 +228,8 @@ const EleveForm = ({ onSave, initialData }) => {
                             <input
                                 type="text"
                                 className="form-control"
-                                name="contact_parent"
-                                value={formData.contact_parent}
+                                name="contactParent"
+                                value={formData.contactParent}
                                 onChange={handleChange}
                                 placeholder="Contact du parent"
                             />
@@ -209,22 +238,21 @@ const EleveForm = ({ onSave, initialData }) => {
                             <input
                                 type="text"
                                 className="form-control"
-                                name="adresse_parent"
-                                value={formData.adresse_parent}
+                                name="adresseParent"
+                                value={formData.adresseParent}
                                 onChange={handleChange}
                                 placeholder="Adresse du parent"
                             />
                         </div>
-                        <div className="form-group">
+                        {/* <div className="form-group">
                             <input
-                                type="fiile"
+                                type="file"
                                 className="form-control"
-                                name="image_eleve"
-                                value={formData.image_eleve}
+                                name="imageEleve"
                                 onChange={handleChange}
                                 placeholder="URL de l'image de l'élève"
                             />
-                        </div>
+                        </div> */}
                         <button type="submit" className="btn btn-primary">
                             {initialData ? "Modifier" : "Ajouter"}
                         </button>

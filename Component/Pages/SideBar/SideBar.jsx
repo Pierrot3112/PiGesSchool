@@ -84,6 +84,12 @@ const SideBar = ({ setMenuSelectionne }) => {
                             <span>Notes</span>
                         </a>
                     </li>
+                    <li className={menuActif === 'Presence' ? 'active' : ''}>
+                        <a href="#" onClick={() => handleMenuClick('Presence')}>
+                            <i className="fa"></i>
+                            <span>Presence</span>
+                        </a>
+                    </li>
                     <li className={menuActif === 'Calendrier Scolaire' ? 'active' : ''}>
                         <a href="#" onClick={() => handleMenuClick('Calendrier Scolaire')}>
                             <i className="fa"></i>

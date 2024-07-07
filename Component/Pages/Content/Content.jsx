@@ -10,6 +10,7 @@ import Enseignants from '../../Enseignants/Enseignants'
 import EmploisDuTemps from '../../EmploiDuTemps/EmploiDuTemps'
 import Notes from '../../Notes/Notes'
 import CalendrierScolaire from '../../CalendrierScolaire/CalenrierScolaire'
+import Presence from '../../Presence/Presence';
 
 const Content = () => {
     const [menuSelectionne, setMenuSelectionne] = useState('Tableau de bord');
@@ -31,6 +32,7 @@ const Content = () => {
                 {menuSelectionne === 'Emplois ddu temps' && <EmploisDuTemps />}
                 {menuSelectionne === 'Notes' && <Notes />}
                 {menuSelectionne === 'Calendrier Scolaire' && <CalendrierScolaire />} 
+                {menuSelectionne === 'Presence' && <Presence />} 
             </div>
             <footer className="main-footer">
                 <Footer />
