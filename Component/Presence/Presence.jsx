@@ -28,10 +28,10 @@ const Presence = () => {
           <div className="col-md-3">
             <div className="btn btn-primary btn-block margin-bottom">
                <div className="row">
-                <div style={{height: '100%', width: '30%'}}>
+                  <div className="input-group-btl">
                     <i className="fa fa-clock-o"></i> 
                     </div>
-                    <div style={{height: '100%', width: '70%'}}>
+                    <div className="input-group">
                         {currentDateTime.toLocaleDateString()} <br /> {currentDateTime.toLocaleTimeString()}
                     </div>
                </div>
@@ -41,6 +41,9 @@ const Presence = () => {
             <div className="box box-primary">
               <div className="box-header with-border">
                 <h3 className="box-title">Classe de Première :</h3>
+              </div>
+              <div className="box-body">
+                
               </div>
             </div>
           </div>
