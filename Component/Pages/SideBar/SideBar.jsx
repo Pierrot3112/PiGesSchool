@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import User from '../../../Page/dist/img/avatar2.png';
 
-const SideBar = ({ setMenuSelectionne }) => {
+const SideBar = ({ setMenuSelectionne, setSousMenuSelectionne }) => {
     const [menuActif, setMenuActif] = useState('Tableau de bord');
-    const [sousMenuSelectionne, setSousMenuSelectionne] = useState(null); // État pour suivre le sous-menu actif
+    const [sousMenuSelectionne, setSousMenuLocal] = useState(null);
 
     const handleMenuClick = (menu) => {
         setMenuActif(menu);
         setMenuSelectionne(menu);
-        setSousMenuSelectionne(null); // Réinitialiser le sous-menu actif à chaque clic sur un nouveau menu principal
+        setSousMenuSelectionne(null);
+        setSousMenuLocal(null);
     };
 
     const handleSubMenuClick = (sousMenu) => {
+        setSousMenuLocal(sousMenu);
         setSousMenuSelectionne(sousMenu);
     };
 
@@ -56,7 +58,6 @@ const SideBar = ({ setMenuSelectionne }) => {
                         <ul className="treeview-menu" style={{ display: menuActif === 'Classe' ? 'block' : 'none' }}>
                             <li className={sousMenuSelectionne === 'Premiere' ? 'active' : ''}><a href="#" onClick={() => handleSubMenuClick('Premiere')}>Premiere</a></li>
                             <li className={sousMenuSelectionne === 'Terminal' ? 'active' : ''}><a href="#" onClick={() => handleSubMenuClick('Terminal')}>Terminal</a></li>
-                            <li className={sousMenuSelectionne === 'Inscription' ? 'active' : ''}><a href="#" onClick={() => handleSubMenuClick('Inscription')}>Inscription</a></li>
                             <li className={sousMenuSelectionne === 'Seconde' ? 'active' : ''}><a href="#" onClick={() => handleSubMenuClick('Seconde')}>Seconde</a></li>
                         </ul>
                     </li>

@@ -1,7 +1,25 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
+import PresenceTable from './PresenceTable'; // Assurez-vous que le chemin du fichier est correct
 
 const Presence = () => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const [classes, setClasses] = useState([]);
+  const [activeTab, setActiveTab] = useState(null);
+  const [activeContent, setActiveContent] = useState(null);
+
+  useEffect(() => {
+    fetchClasses();
+  }, []);
+
+  const fetchClasses = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/classe');
+      setClasses(response.data);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des classes', error);
+    }
+  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -10,6 +28,12 @@ const Presence = () => {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  const handleTabClick = (classeId) => {
+    setActiveTab(classeId);
+    const selectedClass = classes.find(classe => classe.id === classeId);
+    setActiveContent(selectedClass);
+  };
 
   return (
     <>
@@ -27,23 +51,42 @@ const Presence = () => {
         <div className="row">
           <div className="col-md-3">
             <div className="btn btn-primary btn-block margin-bottom">
-               <div className="row">
-                  <div className="input-group-btl">
-                    <i className="fa fa-clock-o"></i> 
-                    </div>
-                    <div className="input-group">
-                        {currentDateTime.toLocaleDateString()} <br /> {currentDateTime.toLocaleTimeString()}
-                    </div>
-               </div>
+              <h1>
+                <b>
+                  {currentDateTime.toLocaleDateString()} <br /> {currentDateTime.toLocaleTimeString()}
+                </b>
+              </h1>
+            </div>
+            <div className="box box-solid">
+              <div className="box-header with-border">
+                <h3 className="box-title">Classes</h3>
+              </div>
+              <div className="box-body no-padding">
+                <ul className="nav nav-pills nav-stacked">
+                  {classes.map(classe => (
+                    <li key={classe.id} className={activeTab === classe.id ? 'active' : ''}>
+                      <a href="#" onClick={() => handleTabClick(classe.id)}>
+                        {classe.nom}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
           <div className="col-md-9">
-            <div className="box box-primary">
+            <div className="box box-info">
               <div className="box-header with-border">
-                <h3 className="box-title">Classe de Première :</h3>
+                <h3 className="box-title">
+                  {activeContent ? `Présence sur la classe ${activeContent.nom}` : 'Sélectionnez une classe'}
+                </h3>
               </div>
               <div className="box-body">
-                
+                {activeContent ? (
+                  <PresenceTable classId={activeContent.id} />
+                ) : (
+                  <p>Veuillez sélectionner une classe pour voir le contenu.</p>
+                )}
               </div>
             </div>
           </div>

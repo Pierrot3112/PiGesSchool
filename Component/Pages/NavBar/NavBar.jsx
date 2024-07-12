@@ -1,4 +1,4 @@
-import Img from '../../../Page/dist/img/avatar.png'
+import Img from '../../../Page/dist/img/avatar2.png'
 
 const NavBar = () =>{
     return(

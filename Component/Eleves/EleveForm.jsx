@@ -18,8 +18,24 @@ const EleveForm = ({ onSave, initialData }) => {
         professionMere: '',
         contactParent: '',
         adresseParent: '',
-        // imageEleve: '',
+        image: null,
     });
+
+    // Assurez-vous que classes est initialisé comme un tableau vide []
+    const [classes, setClasses] = useState([]);
+
+    useEffect(() => {
+        const fetchClasses = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/classe');
+                setClasses(response.data);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des classes : ', error);
+            }
+        };
+
+        fetchClasses();
+    }, []);
 
     useEffect(() => {
         if (initialData) {
@@ -30,7 +46,7 @@ const EleveForm = ({ onSave, initialData }) => {
                 adresse: initialData.adresse || '',
                 sexe: initialData.sexe || '',
                 ecoleOrigine: initialData.ecoleOrigine || '',
-                classe: initialData.classe || '',
+                classe: initialData.classe ? initialData.classe.id : '',
                 matricule: initialData.matricule || '',
                 nomPere: initialData.nomPere || '',
                 professionPere: initialData.professionPere || '',
@@ -38,47 +54,44 @@ const EleveForm = ({ onSave, initialData }) => {
                 professionMere: initialData.professionMere || '',
                 contactParent: initialData.contactParent || '',
                 adresseParent: initialData.adresseParent || '',
-                imageEleve: initialData.imageEleve || '',
+                image: initialData.image || null,
             });
         }
     }, [initialData]);
 
     const handleChange = (e) => {
-        const { name, value, type, files } = e.target;
-        if (type === "file") {
-            setFormData({ ...formData, [name]: files[0] });
-        } else {
-            setFormData({ ...formData, [name]: value });
-        }
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleImageClick = () => {
+        // Gérer l'affichage du menu contextuel ici
+    };
+
+    const handleImportImage = (e) => {
+        // Gérer l'import d'image ici
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formDataToSend = new FormData();
-        Object.keys(formData).forEach(key => {
-            formDataToSend.append(key, formData[key]);
-        });
-
-        console.log('Form data:', formData);
-
         try {
             let response;
             if (initialData && initialData.id) {
                 const url = `http://localhost:8080/api/eleves/${initialData.id}`;
-                response = await axios.put(url, formDataToSend, {
+                response = await axios.put(url, formData, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
             } else {
                 const url = 'http://localhost:8080/api/eleves';
-                response = await axios.post(url, formDataToSend, {
+                response = await axios.post(url, formData, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
             }
-
+    
             if (response.status === 200 || response.status === 201) {
                 console.log('Response data:', response.data);
                 toast.success("Opération réussie");
@@ -92,6 +105,7 @@ const EleveForm = ({ onSave, initialData }) => {
             toast.error("Erreur lors de l'enregistrement");
         }
     };
+    
 
     return (
         <div className="container">
@@ -100,7 +114,7 @@ const EleveForm = ({ onSave, initialData }) => {
                     <h1 className="text-center mb-4">
                         {initialData ? "Modifier l'élève" : "Ajouter un élève"}
                     </h1>
-                    <form onSubmit={handleSubmit} encType="multipart/form-data">
+                    <form onSubmit={handleSubmit}>
                         <div className="form-group">
                             <input
                                 type="text"
@@ -165,14 +179,17 @@ const EleveForm = ({ onSave, initialData }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <input
-                                type="text"
+                            <select
                                 className="form-control"
                                 name="classe"
                                 value={formData.classe}
                                 onChange={handleChange}
-                                placeholder="Classe"
-                            />
+                            >
+                                <option value="">Sélectionnez une classe</option>
+                                {Array.isArray(classes) && classes.length > 0 && classes.map(classe => (
+                                    <option key={classe.id} value={classe.id}>{classe.nom}</option>
+                                ))}
+                            </select>
                         </div>
                         <div className="form-group">
                             <input
@@ -244,15 +261,36 @@ const EleveForm = ({ onSave, initialData }) => {
                                 placeholder="Adresse du parent"
                             />
                         </div>
-                        {/* <div className="form-group">
-                            <input
-                                type="file"
-                                className="form-control"
-                                name="imageEleve"
-                                onChange={handleChange}
-                                placeholder="URL de l'image de l'élève"
-                            />
-                        </div> */}
+                        <div className="form-group">
+                            <div className="position-relative">
+                                <img
+                                    src={formData.image ? URL.createObjectURL(formData.image) : ''}
+                                    alt="Image de l'élève"
+                                    className="img-fluid img-thumbnail mb-2"
+                                    onClick={handleImageClick}
+                                />
+                                {/* Menu contextuel pour gérer l'image */}
+                                <div className="position-absolute top-0 start-100 translate-middle">
+                                    <ul className="list-group">
+                                        <li className="list-group-item">
+                                            <label htmlFor="importImage">Importer une image</label>
+                                            <input
+                                                type="file"
+                                                id="importImage"
+                                                accept="image/*"
+                                                className="form-control"
+                                                onChange={handleImportImage}
+                                            />
+                                        </li>
+                                        <li className="list-group-item">
+                                            <button type="button" className="btn btn-link" onClick={() => { }}>
+                                                Prendre une photo
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                         <button type="submit" className="btn btn-primary">
                             {initialData ? "Modifier" : "Ajouter"}
                         </button>

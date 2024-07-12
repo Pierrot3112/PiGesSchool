@@ -17,6 +17,7 @@ function ScheduleApp() {
     try {
       const response = await axios.get('http://localhost:8080/api/classe');
       setClasses(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error('Erreur lors de la récupération des classes', error);
     }

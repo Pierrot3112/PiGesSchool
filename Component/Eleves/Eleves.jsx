@@ -13,22 +13,21 @@ const Eleves = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deleteEleveId, setDeleteEleveId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const [eleves, setEleves] = useState([]); // Utilisez l'état pour stocker les élèves récupérés
+    const [eleves, setEleves] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
-        // Fonction pour récupérer les élèves depuis votre API
         const fetchEleves = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/eleves'); // Remplacez par votre URL d'API
-                setEleves(response.data); // Mettez à jour l'état avec les données reçues
+                const response = await axios.get('http://localhost:8080/api/eleves');
+                setEleves(response.data);
             } catch (error) {
                 console.error('Erreur lors de la récupération des élèves : ', error);
             }
         };
 
-        fetchEleves(); // Appelez la fonction de récupération des élèves
-    }, []); // Le tableau vide [] indique que ce useEffect s'exécute une seule fois après le premier rendu
+        fetchEleves();
+    }, []);
 
     const handleOpenForm = () => {
         setShowForm(true);
@@ -56,28 +55,25 @@ const Eleves = () => {
             setShowDeleteConfirm(false);
             setDeleteEleveId(null);
             toast.success("Suppression réussie");
-            // Mettre à jour la liste des élèves après la suppression si nécessaire
+            // Actualiser la liste des élèves après la suppression si nécessaire
         } catch (error) {
             console.error('Erreur lors de la suppression de l\'élève : ', error);
             toast.error("Erreur lors de la suppression de l'élève");
         }
     };
 
-    // Filtrage des élèves en fonction du terme de recherche
     const filteredEleves = eleves.filter(
         (eleve) =>
         eleve.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
         eleve.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        eleve.classe.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (eleve.classe && eleve.classe.nom.toLowerCase().includes(searchTerm.toLowerCase())) || // Vérifier si eleve.classe existe avant d'accéder à eleve.classe.nom
         eleve.ecoleOrigine.toLowerCase().includes(searchTerm.toLowerCase()) ||
         eleve.matricule.toLowerCase().includes(searchTerm.toLowerCase()) ||
         eleve.sexe.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        eleve.dateNaissance.toLowerCase().includes(searchTerm.toLowerCase()) ||
         eleve.adresse.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Pagination
-    const itemsPerPage = 10;
+    const itemsPerPage = 3;
     const pageCount = Math.ceil(filteredEleves.length / itemsPerPage);
     const offset = currentPage * itemsPerPage;
     const currentItems = filteredEleves.slice(offset, offset + itemsPerPage);
@@ -95,19 +91,19 @@ const Eleves = () => {
                 </h1>
                 <ol className="breadcrumb">
                     <li><a href="#"><i className="fa fa-note"></i>Listes</a></li>
-                    <li><a href="#">Elèves</a></li>
-                    <li className="active">Premières S</li>
+                    <li><a href="#">Toutes les élèves</a></li>
+                    <li className="active">Inscrits</li>
                 </ol>
             </section>
             <br />
-            <section className="content">
+            <section className="content">   
                 <div className="row">
                     <div className="col-md-1"></div>
                     <div className="col-xs-12">
                         <div className="box">
                             <div className="box-header">
                                 <h3 className="title">
-                                    Tableau d'affichage d'une classe
+                                    Liste de tous les élèves inscrits:
                                 </h3>
                                 <div className="box-tools">
                                     <div className="input-group">
@@ -129,7 +125,7 @@ const Eleves = () => {
                                 </div>
                                 <div className="pull-right hidden-xs">
                                     <button className="btn btn-primary" onClick={handleOpenForm}>
-                                        <FontAwesomeIcon icon={faPlus} /> <b>Ajouter une nouvelle élève</b>
+                                        <FontAwesomeIcon icon={faPlus} /> <b>Ajouter un nouvel élève</b>
                                     </button>
                                 </div>
                             </div>
@@ -149,15 +145,15 @@ const Eleves = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {currentItems.map((eleve) => (
+                                        {currentItems.map((eleve, index) => (
                                             <tr key={eleve.id}>
-                                                <td style={{ width: '10px' }}>{eleve.id}.</td>
+                                                <td>{offset + index + 1}.</td>
                                                 <td>{eleve.nom} {eleve.prenom}</td>
                                                 <td>{eleve.dateNaissance}</td>
                                                 <td>{eleve.adresse}</td>
                                                 <td>{eleve.sexe}</td>
                                                 <td>{eleve.ecoleOrigine}</td>
-                                                <td>{eleve.classe}</td>
+                                                <td>{eleve.classe ? eleve.classe.nom : ''}</td>
                                                 <td>{eleve.matricule}</td>
                                                 <td>
                                                     <button onClick={() => handleEdit(eleve)} title="Modifier">
