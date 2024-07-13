@@ -6,14 +6,14 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 // Données statiques
 const data = [
-  { name: 'Seconde', value: 400 },
-  { name: 'Première', value: 300 },
-  { name: 'Terminale', value: 300 }
+  { name: 'Seconde', value: 50 },
+  { name: 'Première', value: 400 },
+  { name: 'Terminale', value: 100 }
 ];
 
 const EleveStatistique = () => {
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="70%" height={400}>
       <PieChart>
         <Pie
           data={data}

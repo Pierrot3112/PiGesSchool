@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import PresenceTable from './PresenceTable'; // Assurez-vous que le chemin du fichier est correct
+import BarChart from './Barchart'; // Importer le nouveau composant BarChart
 
 const Presence = () => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -78,14 +79,14 @@ const Presence = () => {
             <div className="box box-info">
               <div className="box-header with-border">
                 <h3 className="box-title">
-                  {activeContent ? `Présence sur la classe ${activeContent.nom}` : 'Sélectionnez une classe'}
+                  {activeContent ? `Présence sur la classe ${activeContent.nom}` : 'Taux d\'absence'}
                 </h3>
               </div>
               <div className="box-body">
                 {activeContent ? (
                   <PresenceTable classId={activeContent.id} />
                 ) : (
-                  <p>Veuillez sélectionner une classe pour voir le contenu.</p>
+                  <BarChart /> 
                 )}
               </div>
             </div>

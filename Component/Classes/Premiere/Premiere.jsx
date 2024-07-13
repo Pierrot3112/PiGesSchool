@@ -7,53 +7,7 @@ const Premiere = () => {
                 <h1>Classe de Première</h1>
             </section>
             <section className="content">
-                <div className="row">
-                    <div className="col-md-3 col-sm-6 col-xs-12">
-                        <div className="info-box">
-                            <span className="info-box-icon bg-aqua">
-                                <i></i>
-                            </span>
-                            <div className="info-box-content">
-                                <span className="info-box-text"></span>
-                                <span className="info-box-number"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-3 col-sm-6 col-xs-12">
-                        <div className="info-box">
-                            <span className="info-box-icon bg-aqua">
-                                <i></i>
-                            </span>
-                            <div className="info-box-content">
-                                <span className="info-box-text"></span>
-                                <span className="info-box-number"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-3 col-sm-6 col-xs-12">
-                        <div className="info-box">
-                            <span className="info-box-icon bg-aqua">
-                                <i></i>
-                            </span>
-                            <div className="info-box-content">
-                                <span className="info-box-text"></span>
-                                <span className="info-box-number"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-3 col-sm-6 col-xs-12">
-                        <div className="info-box">
-                            <span className="info-box-icon bg-aqua">
-                                <i></i>
-                            </span>
-                            <div className="info-box-content">
-                                <span className="info-box-text"></span>
-                                <span className="info-box-number"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <hr />
+               
                 <div className="row">
                     <div className="col-md-3">
                         <div className="box box-solid">
@@ -146,3 +100,17 @@ const Premiere = () => {
 }
 
 export default Premiere;
+
+<BarChart width={500} height={300} data={data2} margin={{ top: 5, right: 30, left: 20,
+                                    bottom: 5, }}>
+                                    <CartesianGrid strokeDasharray="3 2" />
+                                    <XAxis dataKey="name" />
+                                    <YAxis tickFormatter={(tick)=> `${tick}`} // Formater les étiquettes de l'axe des
+                                        ordonnées
+                                        domain={[0, 'dataMax']} // Ajuster le domaine des valeurs de l'axe des ordonnées
+                                        />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Bar dataKey="Garçon" fill="#8884d8" background={{ fill: '#eee' }} />
+                                        <Bar dataKey="fille" fill="#82ca9d" />
+                                </BarChart>

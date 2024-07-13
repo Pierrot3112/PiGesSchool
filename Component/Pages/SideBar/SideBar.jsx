@@ -3,17 +3,21 @@ import User from '../../../Page/dist/img/avatar2.png';
 
 const SideBar = ({ setMenuSelectionne, setSousMenuSelectionne }) => {
     const [menuActif, setMenuActif] = useState('Tableau de bord');
-    const [sousMenuSelectionne, setSousMenuLocal] = useState(null);
+    const [sousMenuActif, setSousMenuActif] = useState(null);
 
     const handleMenuClick = (menu) => {
-        setMenuActif(menu);
-        setMenuSelectionne(menu);
-        setSousMenuSelectionne(null);
-        setSousMenuLocal(null);
+        if (menu !== 'Classe') {
+            setMenuActif(menu);
+            setMenuSelectionne(menu);
+            setSousMenuSelectionne(null);
+            setSousMenuActif(null);
+        } else {
+            setMenuActif('Classe');
+        }
     };
 
     const handleSubMenuClick = (sousMenu) => {
-        setSousMenuLocal(sousMenu);
+        setSousMenuActif(sousMenu);
         setSousMenuSelectionne(sousMenu);
     };
 
@@ -56,9 +60,9 @@ const SideBar = ({ setMenuSelectionne, setSousMenuSelectionne }) => {
                             </span>
                         </a>
                         <ul className="treeview-menu" style={{ display: menuActif === 'Classe' ? 'block' : 'none' }}>
-                            <li className={sousMenuSelectionne === 'Premiere' ? 'active' : ''}><a href="#" onClick={() => handleSubMenuClick('Premiere')}>Premiere</a></li>
-                            <li className={sousMenuSelectionne === 'Terminal' ? 'active' : ''}><a href="#" onClick={() => handleSubMenuClick('Terminal')}>Terminal</a></li>
-                            <li className={sousMenuSelectionne === 'Seconde' ? 'active' : ''}><a href="#" onClick={() => handleSubMenuClick('Seconde')}>Seconde</a></li>
+                            <li className={sousMenuActif === 'Premiere' ? 'active' : ''}><a href="#" onClick={() => handleSubMenuClick('Premiere')}>Premiere</a></li>
+                            <li className={sousMenuActif === 'Terminal' ? 'active' : ''}><a href="#" onClick={() => handleSubMenuClick('Terminal')}>Terminal</a></li>
+                            <li className={sousMenuActif === 'Seconde' ? 'active' : ''}><a href="#" onClick={() => handleSubMenuClick('Seconde')}>Seconde</a></li>
                         </ul>
                     </li>
                     <li className={menuActif === 'Elèves' ? 'active' : ''}>
@@ -73,10 +77,10 @@ const SideBar = ({ setMenuSelectionne, setSousMenuSelectionne }) => {
                             <span>Enseignants</span>
                         </a>
                     </li>
-                    <li className={menuActif === 'Emplois ddu temps' ? 'active' : ''}>
-                        <a href="#" onClick={() => handleMenuClick('Emplois ddu temps')}>
+                    <li className={menuActif === 'Emplois du temps' ? 'active' : ''}>
+                        <a href="#" onClick={() => handleMenuClick('Emplois du temps')}>
                             <i className="fa"></i>
-                            <span>Emplois ddu temps</span>
+                            <span>Emplois du temps</span>
                         </a>
                     </li>
                     <li className={menuActif === 'Notes' ? 'active' : ''}>

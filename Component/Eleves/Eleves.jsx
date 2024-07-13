@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt, faTimes, faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
 import './Eleves.css'; // Assurez-vous d'importer votre fichier CSS
 import axios from 'axios'; // Importez axios pour effectuer des requêtes HTTP
+import PdfButton from '../Pdf/PdfButton';
 
 const Eleves = () => {
     const [showForm, setShowForm] = useState(false);
@@ -180,6 +181,9 @@ const Eleves = () => {
                                     subContainerClassName={'pages pagination'}
                                     activeClassName={'active'}
                                 />
+                                <div className="pull-right">
+                                    <PdfButton />
+                                </div>
                             </div>
                         </div>
                     </div>
